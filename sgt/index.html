@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="auth.css" />
   <link rel="stylesheet" href="role.css" />
   <link rel="stylesheet" href="map.css" />
-  <link rel="stylesheet" href="bearbot.css" />
+  <link rel="stylesheet" href="bearbot.css?v=2" />
   <link rel="stylesheet" href="page-turn.css" />
   <link rel="stylesheet" href="startup-frames.css" />
   <style>#pilotQrModal{z-index:100}</style>
@@ -76,7 +76,7 @@
     <div class="bearbot-scroll">
       <section class="bearbot-note"><span class="bearbot-face">ʕ•ᴥ•ʔ</span><div><p class="mono">BETA ASSISTANT</p><h1>어디로 갈까요?</h1><p>포트베어 안에서 할 수 있는 일만 도와드려요.</p></div></section>
       <div class="bearbot-log" id="bearbotLog" aria-live="polite"><article class="bearbot-bubble bot">안녕하세요, 저는 포트베어의 작은 길잡이예요. “내 페이지로 들어가줘”처럼 말해보세요.</article></div>
-      <div class="bearbot-loading hidden" id="bearbotLoading" role="status" aria-live="polite"><span class="bearbot-spinner" aria-hidden="true"></span><span>곰 도우미가 답을 쓰고 있어요</span><time id="bearbotElapsed">0m 00s</time></div>
+      <div class="bearbot-loading hidden" id="bearbotLoading" role="status" aria-live="polite"><span class="bearbot-pencil" aria-hidden="true">✎</span><time id="bearbotElapsed">0m 00s</time></div>
       <div class="bearbot-suggestions" aria-label="추천 명령"><button type="button" data-bearbot-prompt="내 페이지로 들어가줘">내 페이지</button><button type="button" data-bearbot-prompt="지도를 열어줘">지도 열기</button><button type="button" data-bearbot-prompt="Hot 채팅으로 가줘">Hot 채팅</button><button type="button" data-bearbot-prompt="저장한 메모를 보여줘">저장한 메모</button></div>
       <p class="bearbot-status" id="bearbotStatus">Gemini 무료 테스트 · 화면 이동만 실행해요</p>
       <form class="bearbot-form" id="bearbotForm"><input id="bearbotInput" maxlength="180" placeholder="예: 내 페이지로 들어가줘" autocomplete="off" /><button type="submit" aria-label="전송">↑</button></form>
@@ -91,6 +91,6 @@
   <script src="pilot.js?v=pilot-2"></script>
   <script src="startup-frames.js?v=1"></script>
   <script type="module" src="firebase-auth.js?v=1"></script>
-  <script type="module" src="firebase-bearbot.js?v=1"></script>
+  <script type="module" src="firebase-bearbot.js?v=2"></script>
 </body>
 </html>

@@ -53,8 +53,8 @@ function createChat() {
   const model = getGenerativeModel(ai, {
     model: 'gemini-3.6-flash',
     tools,
-    generationConfig: { maxOutputTokens: 180, temperature: 0.5 },
-    systemInstruction: 'You are the gentle Korean guide inside the Portbear mobile app. Reply in Korean, briefly and warmly. You may only use the four provided functions for navigation. Never claim a reservation, payment, match, or external action was completed. If the user asks for anything else, explain what you can help with.'
+    generationConfig: { maxOutputTokens: 512, temperature: 0.5 },
+    systemInstruction: 'You are the gentle Korean guide inside the Portbear mobile app. Reply in Korean, briefly and warmly. Keep answers to one or two complete sentences: never stop halfway through a word or sentence. You may only use the four provided functions for navigation. Never claim a reservation, payment, match, or external action was completed. If the user asks for anything else, explain what you can help with.'
   });
   return model.startChat();
 }
