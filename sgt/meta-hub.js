@@ -9,7 +9,13 @@
   const points = () => +(localStorage.getItem('sbs-points') || 240);
   const setPoints = value => localStorage.setItem('sbs-points', Math.max(0, value));
   const people = items => items.length ? items : [];
+  const mapPlaces = [
+    { title: '망원 작은 극장', subtitle: '1.2 km · 오늘 남은 좌석 12석', detail: '오늘 20:00 상영 · 현장 QR 입장 · 30% 특가', lat: 37.5563, lng: 126.9236 },
+    { title: '성수의 작은 호텔', subtitle: '3.8 km · 오늘 체크인 특가', detail: '오늘 1박 · 조식 포함 · AI 예약 가능', lat: 37.5448, lng: 127.0563 }
+  ];
   let kakaoMap;
+  let mapPositions = [];
+  let selectedMapPlace = null;
 
   function renderKakaoMap() {
     const container = $('#kakaoMap');
@@ -17,18 +23,20 @@
     if (kakaoMap) return kakaoMap.relayout();
     const center = new window.kakao.maps.LatLng(37.5505, 126.99);
     kakaoMap = new window.kakao.maps.Map(container, { center, level: 8 });
-    const places = [{ title: '망원 작은 극장', lat: 37.5563, lng: 126.9236 }, { title: '성수의 작은 호텔', lat: 37.5448, lng: 127.0563 }];
-    const path = places.map(place => new window.kakao.maps.LatLng(place.lat, place.lng));
-    new window.kakao.maps.Polyline({ map: kakaoMap, path, strokeWeight: 3, strokeColor: '#e87482', strokeOpacity: .9, strokeStyle: 'shortdash' });
-    places.forEach((place, index) => {
-      const marker = new window.kakao.maps.Marker({ map: kakaoMap, position: path[index], title: place.title, clickable: true });
-      window.kakao.maps.event.addListener(marker, 'click', () => {
-        kakaoMap.setLevel(4);
-        kakaoMap.panTo(path[index]);
-        toast(`${place.title} 주변으로 이동했어요.`);
-      });
-    });
+    mapPositions = mapPlaces.map(place => new window.kakao.maps.LatLng(place.lat, place.lng));
+    new window.kakao.maps.Polyline({ map: kakaoMap, path: mapPositions, strokeWeight: 3, strokeColor: '#e87482', strokeOpacity: .9, strokeStyle: 'shortdash' });
+    mapPlaces.forEach((place, index) => new window.kakao.maps.Marker({ map: kakaoMap, position: mapPositions[index], title: place.title }));
     container.classList.add('map-ready');
+  }
+
+  function toggleMapPlace(index) {
+    const isClosing = selectedMapPlace === index;
+    selectedMapPlace = isClosing ? null : index;
+    document.querySelectorAll('.map-sample').forEach((item, itemIndex) => item.classList.toggle('selected', itemIndex === selectedMapPlace));
+    if (!isClosing && kakaoMap && mapPositions[index]) {
+      kakaoMap.setLevel(4);
+      kakaoMap.panTo(mapPositions[index]);
+    }
   }
 
   function addPhotoField() {
@@ -77,6 +85,7 @@
   $('#inboxButton').onclick = () => { renderInbox(); $('#inboxHub').classList.remove('hidden'); };
   $('#closeInbox').onclick = () => $('#inboxHub').classList.add('hidden');
   $('#closeMap').onclick = () => $('#mapHub').classList.add('hidden');
+  document.querySelectorAll('.map-place-name').forEach(button => button.onclick = () => toggleMapPlace(+button.dataset.mapPlace));
   $('#hubEdit').onclick = () => { $('#meHub').classList.add('hidden'); $('#meSheet').classList.remove('hidden'); $('#meView').classList.add('hidden'); $('#meForm').classList.remove('hidden'); };
   document.querySelectorAll('[data-hub-tab]').forEach(button => button.onclick = () => selectTab(button.dataset.hubTab));
   $('#newInvite').onclick = () => $('#inviteComposer').classList.toggle('hidden');
