@@ -1,6 +1,7 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js';
 import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js';
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-app-check.js';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCIOwKTKfM249QskhxU6WKs0YGzn-TNkGs',
@@ -13,6 +14,10 @@ const firebaseConfig = {
 
 const firebaseApp = initializeApp(firebaseConfig);
 window.portbearFirebaseApp = firebaseApp;
+initializeAppCheck(firebaseApp, {
+  provider: new ReCaptchaEnterpriseProvider('6LdcJY8tAAAAAE8lrc0gscawvwS01bSOIGnyHHm-'),
+  isTokenAutoRefreshEnabled: true
+});
 const auth = getAuth(firebaseApp);
 const db = getFirestore();
 const fields = [['성명', '예: 홍길동'], ['출신지', '예: 전라도'], ['나이', '예: 29세'], ['키', '예: 171cm'], ['무게', '예: 62kg']];
