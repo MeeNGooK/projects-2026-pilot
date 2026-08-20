@@ -9,6 +9,19 @@
   const points = () => +(localStorage.getItem('sbs-points') || 240);
   const setPoints = value => localStorage.setItem('sbs-points', Math.max(0, value));
   const people = items => items.length ? items : [];
+  let kakaoMap;
+
+  function renderKakaoMap() {
+    const container = $('#kakaoMap');
+    if (!container || !window.kakao?.maps) return;
+    if (kakaoMap) return kakaoMap.relayout();
+    const center = new window.kakao.maps.LatLng(37.5505, 126.99);
+    kakaoMap = new window.kakao.maps.Map(container, { center, level: 8 });
+    [{ title: '망원 작은 극장', lat: 37.5563, lng: 126.9236 }, { title: '성수의 작은 호텔', lat: 37.5448, lng: 127.0563 }].forEach(place => {
+      new window.kakao.maps.Marker({ map: kakaoMap, position: new window.kakao.maps.LatLng(place.lat, place.lng), title: place.title });
+    });
+    container.classList.add('map-ready');
+  }
 
   function addPhotoField() {
     const form = $('#meForm'); if (!form || form.querySelector('#repPhotoInput')) return;
@@ -51,9 +64,11 @@
   $('#meButton').addEventListener('click', event => { if (!hasProfile()) return; event.preventDefault(); event.stopImmediatePropagation(); displayHub(); }, true);
   $('#closeHub').onclick = () => $('#meHub').classList.add('hidden');
   $('#contentButton').onclick = () => { $('#meHub').classList.add('hidden'); $('#inboxHub').classList.add('hidden'); };
+  $('#mapButton').onclick = () => { $('#meHub').classList.add('hidden'); $('#inboxHub').classList.add('hidden'); $('#mapHub').classList.remove('hidden'); requestAnimationFrame(renderKakaoMap); };
   $('#profileButton').onclick = () => { if (hasProfile()) displayHub(); else $('#meButton').click(); };
   $('#inboxButton').onclick = () => { renderInbox(); $('#inboxHub').classList.remove('hidden'); };
   $('#closeInbox').onclick = () => $('#inboxHub').classList.add('hidden');
+  $('#closeMap').onclick = () => $('#mapHub').classList.add('hidden');
   $('#hubEdit').onclick = () => { $('#meHub').classList.add('hidden'); $('#meSheet').classList.remove('hidden'); $('#meView').classList.add('hidden'); $('#meForm').classList.remove('hidden'); };
   document.querySelectorAll('[data-hub-tab]').forEach(button => button.onclick = () => selectTab(button.dataset.hubTab));
   $('#newInvite').onclick = () => $('#inviteComposer').classList.toggle('hidden');
