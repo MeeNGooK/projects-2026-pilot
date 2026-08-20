@@ -85,6 +85,14 @@
   $('#inboxButton').onclick = () => { renderInbox(); $('#inboxHub').classList.remove('hidden'); };
   $('#closeInbox').onclick = () => $('#inboxHub').classList.add('hidden');
   $('#closeMap').onclick = () => $('#mapHub').classList.add('hidden');
+  window.portbearNavigate = action => {
+    $('#bearbotHub')?.classList.add('hidden');
+    if (action === 'myPage') { if (hasProfile()) displayHub(); else $('#meButton').click(); return '나의 보드를 열었어요.'; }
+    if (action === 'map') { $('#mapButton').click(); return '내 주변 메모 지도를 열었어요.'; }
+    if (action === 'hotChat') { $('#inboxButton').click(); return 'Hot 채팅 목록을 열었어요.'; }
+    if (action === 'savedNotes') { if (hasProfile()) { displayHub(); selectTab('feed'); } else $('#meButton').click(); return '내가 붙여둔 메모를 열었어요.'; }
+    return '아직 지원하지 않는 이동이에요.';
+  };
   document.querySelectorAll('.map-place-name').forEach(button => button.onclick = () => toggleMapPlace(+button.dataset.mapPlace));
   $('#hubEdit').onclick = () => { $('#meHub').classList.add('hidden'); $('#meSheet').classList.remove('hidden'); $('#meView').classList.add('hidden'); $('#meForm').classList.remove('hidden'); };
   document.querySelectorAll('[data-hub-tab]').forEach(button => button.onclick = () => selectTab(button.dataset.hubTab));

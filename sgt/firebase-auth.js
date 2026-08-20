@@ -11,7 +11,9 @@ const firebaseConfig = {
   appId: '1:57075934247:web:1f8c7be37ed93cbffd1a02'
 };
 
-const auth = getAuth(initializeApp(firebaseConfig));
+const firebaseApp = initializeApp(firebaseConfig);
+window.portbearFirebaseApp = firebaseApp;
+const auth = getAuth(firebaseApp);
 const db = getFirestore();
 const fields = [['성명', '예: 홍길동'], ['출신지', '예: 전라도'], ['나이', '예: 29세'], ['키', '예: 171cm'], ['무게', '예: 62kg']];
 const $ = selector => document.querySelector(selector);
