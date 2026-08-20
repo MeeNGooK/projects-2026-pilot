@@ -17,8 +17,16 @@
     if (kakaoMap) return kakaoMap.relayout();
     const center = new window.kakao.maps.LatLng(37.5505, 126.99);
     kakaoMap = new window.kakao.maps.Map(container, { center, level: 8 });
-    [{ title: '망원 작은 극장', lat: 37.5563, lng: 126.9236 }, { title: '성수의 작은 호텔', lat: 37.5448, lng: 127.0563 }].forEach(place => {
-      new window.kakao.maps.Marker({ map: kakaoMap, position: new window.kakao.maps.LatLng(place.lat, place.lng), title: place.title });
+    const places = [{ title: '망원 작은 극장', lat: 37.5563, lng: 126.9236 }, { title: '성수의 작은 호텔', lat: 37.5448, lng: 127.0563 }];
+    const path = places.map(place => new window.kakao.maps.LatLng(place.lat, place.lng));
+    new window.kakao.maps.Polyline({ map: kakaoMap, path, strokeWeight: 3, strokeColor: '#e87482', strokeOpacity: .9, strokeStyle: 'shortdash' });
+    places.forEach((place, index) => {
+      const marker = new window.kakao.maps.Marker({ map: kakaoMap, position: path[index], title: place.title, clickable: true });
+      window.kakao.maps.event.addListener(marker, 'click', () => {
+        kakaoMap.setLevel(4);
+        kakaoMap.panTo(path[index]);
+        toast(`${place.title} 주변으로 이동했어요.`);
+      });
     });
     container.classList.add('map-ready');
   }
