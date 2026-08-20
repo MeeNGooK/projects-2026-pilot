@@ -11,6 +11,8 @@ const commands = {
 };
 
 let chat;
+let loadingTimer;
+let loadingStartedAt = 0;
 function addBubble(kind, text, extraClass = '') {
   const bubble = document.createElement('article');
   bubble.className = `bearbot-bubble ${kind} ${extraClass}`.trim();
@@ -20,6 +22,23 @@ function addBubble(kind, text, extraClass = '') {
   return bubble;
 }
 function setStatus(text) { $('#bearbotStatus').textContent = text; }
+function formatElapsed(milliseconds) {
+  const seconds = Math.floor(milliseconds / 1000);
+  return `${Math.floor(seconds / 60)}m ${String(seconds % 60).padStart(2, '0')}s`;
+}
+function startLoading() {
+  loadingStartedAt = Date.now();
+  const loading = $('#bearbotLoading');
+  const elapsed = $('#bearbotElapsed');
+  loading.classList.remove('hidden');
+  elapsed.textContent = formatElapsed(0);
+  loadingTimer = window.setInterval(() => { elapsed.textContent = formatElapsed(Date.now() - loadingStartedAt); }, 250);
+}
+function stopLoading() {
+  window.clearInterval(loadingTimer);
+  loadingTimer = undefined;
+  $('#bearbotLoading').classList.add('hidden');
+}
 function openBearbot() { $('#meHub').classList.add('hidden'); $('#inboxHub').classList.add('hidden'); $('#mapHub').classList.add('hidden'); $('#bearbotHub').classList.remove('hidden'); $('#bearbotInput').focus(); }
 
 function createChat() {
@@ -54,6 +73,7 @@ async function sendMessage(text) {
   addBubble('me', message);
   $('#bearbotInput').value = '';
   setStatus('곰 도우미가 메모를 읽고 있어요...');
+  startLoading();
   const loading = addBubble('bot', '···', 'loading');
   try {
     chat ||= createChat();
@@ -77,6 +97,8 @@ async function sendMessage(text) {
     const detail = error?.code === 'ai/fetch-error' ? 'AI 요청이 거절됐어요. Firebase AI Logic 설정과 무료 한도를 확인해 주세요.' : '곰 도우미가 잠시 쉬고 있어요. 잠시 후 다시 시도해 주세요.';
     addBubble('bot', detail);
     setStatus('연결을 확인해 주세요 · 외부 기능은 실행하지 않아요');
+  } finally {
+    stopLoading();
   }
 }
 
